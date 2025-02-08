@@ -5,6 +5,7 @@ import { TURNS } from "./constants";
 import { checkWinner, checkEndGame } from "./logic/board";
 import { WinnerModal } from "./components/WinnerModal";
 import { Board } from "./components/Board";
+import { saveGameToStorage, resetGameStorage } from "./logic/storage";
 
 function App() {
   const [board, setBoard] = useState(() => {
@@ -27,8 +28,7 @@ function App() {
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
     setTurn(newTurn);
 
-    window.localStorage.setItem('board', JSON.stringify(newBoard));
-    window.localStorage.setItem('turn', newTurn);
+    saveGameToStorage({ newBoard, newTurn });
 
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
@@ -44,8 +44,7 @@ function App() {
     setTurn(TURNS.X);
     setWinner(null);
 
-    window.localStorage.removeItem('board');
-    window.localStorage.removeItem('turn');
+    resetGameStorage();
   };
 
   
@@ -53,7 +52,7 @@ function App() {
   return (
     <main className="board">
       <h1>Tic Tac Toe</h1>
-      <button onClick={resetGame}>Reset the game</button>
+      <button className="reset-button" onClick={resetGame}>Reset the game</button>
 
       <Board board={board} updateBoard={updateBoard} />
 
